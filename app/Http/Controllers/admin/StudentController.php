@@ -15,8 +15,11 @@ class StudentController extends Controller
      */
     public function index()
     {
-      $students=DB::table('students')->orderBy('roll','ASC')->get();
-      return view('admin.student.index',compact('students'));
+
+        $students=DB::table('students')->join('class','students.class_id','class_id')->get();
+        //dd($students);
+    //   $students=DB::table('students')->orderBy('roll','ASC')->get();
+     return view('admin.student.index', compact('students'));
     }
 
     /**
@@ -26,8 +29,10 @@ class StudentController extends Controller
      */
     public function create()
     {
-         $classes=DB::table('classes')->get();
-        return view('admin.student.create',compact('classes'));
+         $class=DB::table('class')->get();
+        //
+         return view('admin.student.create',compact('class'));
+
     }
 
     /**
@@ -38,7 +43,23 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+       $request->validate([
+        'class_id' => 'required',
+        'name' => 'required',
+        'phone' => 'required',
+        'roll' => 'required',
+
+       ]);
+       $data=array(
+        'class_id' =>$request->class_id,
+        'name' =>$request->name,
+        'roll' =>$request->roll,
+        'phone' =>$request->phone,
+        'email' =>$request->email,
+       );
+
+       DB::table('students')->insert($data);
+      return redirect()->back()->with('success',' data insert');
     }
 
     /**
@@ -49,7 +70,8 @@ class StudentController extends Controller
      */
     public function show($id)
     {
-        //
+       $students=DB::table('students')->find($id);
+       return view('admin.student.view',compact('students'));
     }
 
     /**
@@ -60,7 +82,9 @@ class StudentController extends Controller
      */
     public function edit($id)
     {
-        //
+        $class=DB::table('class')->get();
+        $students=DB::table('students')->where('id',$id)->first();
+        return view('admin.student.edit',compact('class','students'));
     }
 
     /**
@@ -72,7 +96,20 @@ class StudentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'class_id' => 'required',
+            'name' => 'required',
+            'phone' => 'required',
+            'roll' => 'required',]);
+            $data=array(
+                'class_id' =>$request->class_id,
+                'name' =>$request->name,
+                'roll' =>$request->roll,
+                'phone' =>$request->phone,
+                'email' =>$request->email,
+               );
+               DB::table('students')->where('id',$id)->update($data);
+              return redirect()->route('students.index')->with('success',' data Update');
     }
 
     /**
@@ -83,6 +120,7 @@ class StudentController extends Controller
      */
     public function destroy($id)
     {
-        //
+     DB::table('students')->where('id',$id)->delete();
+     return redirect()->back()->with('success',' data delete');
     }
 }

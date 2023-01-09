@@ -19,7 +19,7 @@ class CatagoryController extends Controller
     public function index()
     {
     //    echo "done";
-    $data = DB::table('class')->get();
+    $data = DB::table('class')->simplepaginate(4);
     return view('admin.class.index', compact('data'));
     }
 
@@ -38,6 +38,7 @@ class CatagoryController extends Controller
       $data=array(
         'class_name' =>$request->class_name,
       );
+
       DB::table('class')->insert($data);
       return redirect()->back()->with('success',' data insert');
     }

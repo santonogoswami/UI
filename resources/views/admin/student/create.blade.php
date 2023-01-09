@@ -11,13 +11,14 @@
                     @if(session()->has('success'))
                     <strong class="text-success"> {{ session()->get('success') }}</strong>
                  @endif
+                 <a href="{{ route('students.index') }}" class="text-sm text-gray-700 dark:text-gray-500 underline">student </a>
                     <a href="{{ route('students.index')}}" class="btn btn-sm btn-primary" style="float: right;"> Add new</a>
-                    <form action="{{ route('store.class')}}" method="post">
+                    <form action="{{ route('students.store')}}" method="post">
                       @csrf
                         <div class="mb-3">
                           <label for="exampleInputEmail1" class="form-label">Class Name</label>
                           <select class="form-control" name="class_id">
-                            @foreach ($classes as $d )
+                            @foreach ($class as $d )
                                <option value="{{$d->id}}"> {{$d->class_name}}</option>
                             @endforeach
                           </select>
@@ -46,7 +47,7 @@
                                 <strong>{{ $message }}</strong>
                             </span>
                           </div>
-
+                             @enderror
 
                                 <div class="mb-3">
                                     <label for="exampleInputEmail1" class="form-label">Student Email</label>
@@ -57,7 +58,7 @@
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span> </div>
-
+                                    @enderror
                                     <div class="mb-3">
                                         <label for="exampleInputEmail1" class="form-label">Student phone</label>
                                         <input type="text" name="phone" class="form-control @error('phone') is-invalid
@@ -67,7 +68,7 @@
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span> </div>
-
+                                        @enderror
                         <button type="submit" class="btn btn-primary">Submit</button>
                       </form>
 
